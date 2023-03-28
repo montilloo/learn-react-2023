@@ -1,0 +1,25 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "API参考/客户端API/createRoot",
+  "steps": [
+    {
+      "file": "src/main.tsx",
+      "description": "一个应用程序可以存在多个Root(根)\r\n> 完全使用 React 构建的应用程序通常只会createRoot对其根组件进行一次调用。页面的某些部分使用 React 的“点缀”的页面可能根据需要有尽可能多的独立根。\r\n\r\n```\r\nconst recoverableErrorCallback = () => {\r\n  console.log('当 React 自动从错误中恢复时调用的回调');\r\n}\r\n\r\nReactDOM.createRoot(document.getElementById('app') as HTMLElement, {\r\n  onRecoverableError: recoverableErrorCallback,\r\n  identifierPrefix: 'n',\r\n}).render(\r\n  <h1>这是另外一个React应用</h1>\r\n)\r\n```\r\n\r\ncreateRoot返回具有两个方法的对象：render和unmount\r\n",
+      "line": 6,
+      "title": "HTML文件中，可存在多个Root Element"
+    },
+    {
+      "file": "src/main.tsx",
+      "description": "root.render(reactNode)\r\n\r\n> reactNode：您要显示的React 节点。这通常是一段 JSX，如<App />，但您也可以传递一个由createElement()、字符串、数字null或构造的 React 元素undefined。\r\n\r\n> 注意事项\r\n\t第一次调用时root.render，React 将在将 React 组件渲染到其中之前清除 React 根目录中所有现有的 HTML 内容。\r\n\r\n\t如果您的根节点的 DOM 节点包含 React 在服务器上或构建期间生成的 HTML，请改用它hydrateRoot()，它将事件处理程序附加到现有的 HTML。\r\n\r\n\t如果你render多次调用同一个根，React 将根据需要更新 DOM 以反映你传递的最新 JSX。React 将决定 DOM 的哪些部分可以重用，哪些需要通过与之前渲染的树“匹配”来重新创建。再次调用render同一个根类似于调用根组件上的set函数：React 避免了不必要的 DOM 更新。\r\n\r\n\t",
+      "line": 11,
+      "title": "root.render方法"
+    },
+    {
+      "file": "src/main.tsx",
+      "description": "> 调用root.unmount将卸载根中的所有组件并从根 DOM 节点“分离”React，包括删除树中的任何事件处理程序或状态。",
+      "line": 12,
+      "title": "root.unmount方法"
+    }
+  ],
+  "ref": "main"
+}
