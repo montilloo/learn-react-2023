@@ -1,0 +1,41 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "学习React/描述UI",
+  "steps": [
+    {
+      "file": "src/App.tsx",
+      "description": "# 为什么多个 JSX 标签需要被一个父元素包裹？\r\n\r\n> JSX 虽然看起来很像 HTML，但在底层其实被转化为了 JavaScript 对象，你不能在一个函数中返回多个对象，除非用一个数组把他们包装起来。这就是为什么多个 JSX 标签必须要用一个父元素或者 Fragment 来包裹。",
+      "line": 9
+    },
+    {
+      "file": "src/App.tsx",
+      "description": "# 使用 “双大括号”：JSX 中的 CSS 和 对象 \r\n\r\n> 除了字符串、数字和其它 JavaScript 表达式，你甚至可以在 JSX 中传递对象。对象也用大括号表示，例如 { name: \"Hedy Lamarr\", inventions: 5 }。因此，为了能在 JSX 中传递，你必须用另一对额外的大括号包裹对 象：person={{ name: \"Hedy Lamarr\", inventions: 5 }}。你可能在 JSX 的内联 CSS 样式中就已经见过这种写法了。React 不要求你使用内联样式（使用 CSS 类就能满足大部分情况）。但是当你需要内联样式的时候，你可以给 style 属性传递一个对象：",
+      "line": 18
+    },
+    {
+      "file": "src/App.tsx",
+      "description": "# 现在你几乎了解了有关 JSX 的一切：\r\n\r\n> * JSX 引号内的值会作为字符串传递给属性。\r\n> * 大括号让你可以将 JavaScript 的逻辑和变量带入到标签中。\r\n> * 它们会在 JSX 标签中的内容区域或紧随属性的 = 后起作用。\r\n> * {{ 和 }} 并不是什么特殊的语法：它只是包在 JSX 大括号内的 JavaScript 对象。",
+      "line": 34
+    },
+    {
+      "file": "src/App.tsx",
+      "description": "# 给 prop 指定一个默认值\r\n\r\n如果你想在没有指定值的情况下给 prop 一个默认值，你可以通过在参数后面写 = 和默认值来进行解构：\r\n\r\n```\r\nfunction Avatar({ person, size = 100 }) {\r\n\t// ...\r\n}\r\n```\r\n\r\n现在， 如果 <Avatar person={...} /> 渲染时没有 size prop，  size 将被赋值为 100。\r\n\r\n默认值仅在缺少 size prop 或 size={undefined} 时生效。 但是如果你传递了 size={null} 或 size={0}，默认值将 不 被使用。\r\n",
+      "line": 15
+    },
+    {
+      "file": "src/App.tsx",
+      "description": "# Props 如何随时间变化\r\n\r\n下面的 Clock 组件从其父组件接收两个 props：color 和 time。（父组件的代码被省略，因为它使用 state，我们暂时不会深入研究。）\r\n\r\n尝试在下面的选择框中更改颜色：\r\n\r\n```\r\nexport default function Clock({ color, time }) {\r\n  return (\r\n    <h1 style={{ color: color }}>\r\n      {time}\r\n    </h1>\r\n  );\r\n}\r\n```\r\n这个例子说明，一个组件可能会随着时间的推移收到不同的 props。 Props 并不总是静态的！在这里，time prop 每秒都在变化。当你选择另一种颜色时，color prop 也改变了。Props 反映了组件在任何时间点的数据，并不仅仅是在开始时。\r\n\r\n然而，props 是 不可变的（一个计算机科学术语，意思是“不可改变”）。**当一个组件需要改变它的 props（例如，响应用户交互或新数据）时，它不得不“请求”它的父组件传递 不同的 props —— 一个新对象！它的旧 props 将被丢弃，最终 JavaScript 引擎将回收它们占用的内存。**\r\n\r\n不要尝试“更改 props”。 当你需要响应用户输入（例如更改所选颜色）时，你可以“设置 state”，你可以在 State: 一个组件的内存 中继续了解。\r\n",
+      "line": 27
+    },
+    {
+      "title": "条件渲染学到了",
+      "description": "Challenge 3 of 3: 用 if 和变量重构多余的 ? : \r\n这个 Drink 组件使用了一系列的 ? : 条件语句，根据 name 属性是 \"tea\" 还是 \"coffee\" 来显示不同的信息。问题是，每个饮品的信息是在不同的条件判断里的。请去掉那三个 ? : 条件，使用一个 if 语句来重构这段代码。\r\n\r\n```\r\nfunction Drink({ name }) {\r\n  return (\r\n    <section>\r\n      <h1>{name}</h1>\r\n      <dl>\r\n        <dt>Part of plant</dt>\r\n        <dd>{name === 'tea' ? 'leaf' : 'bean'}</dd>\r\n        <dt>Caffeine content</dt>\r\n        <dd>{name === 'tea' ? '15–70 mg/cup' : '80–185 mg/cup'}</dd>\r\n        <dt>Age</dt>\r\n        <dd>{name === 'tea' ? '4,000+ years' : '1,000+ years'}</dd>\r\n      </dl>\r\n    </section>\r\n  );\r\n}\r\n\r\nexport default function DrinkList() {\r\n  return (\r\n    <div>\r\n      <Drink name=\"tea\" />\r\n      <Drink name=\"coffee\" />\r\n    </div>\r\n  );\r\n}\r\n```\r\n\r\nSolution\r\n很多的方法可以解决这个问题，这是只是其中一个可以切入的点：\r\n\r\n```\r\nfunction Drink({ name }) {\r\n  let part, caffeine, age;\r\n  if (name === 'tea') {\r\n    part = 'leaf';\r\n    caffeine = '15–70 mg/cup';\r\n    age = '4,000+ years';\r\n  } else if (name === 'coffee') {\r\n    part = 'bean';\r\n    caffeine = '80–185 mg/cup';\r\n    age = '1,000+ years';\r\n  }\r\n  return (\r\n    <section>\r\n      <h1>{name}</h1>\r\n      <dl>\r\n        <dt>Part of plant</dt>\r\n        <dd>{part}</dd>\r\n        <dt>Caffeine content</dt>\r\n        <dd>{caffeine}</dd>\r\n        <dt>Age</dt>\r\n        <dd>{age}</dd>\r\n      </dl>\r\n    </section>\r\n  );\r\n}\r\n\r\nexport default function DrinkList() {\r\n  return (\r\n    <div>\r\n      <Drink name=\"tea\" />\r\n      <Drink name=\"coffee\" />\r\n    </div>\r\n  );\r\n}\r\n```\r\n\r\n这个例子中，每种饮品的信息是放在一起的，而没有将其分散到多个条件判断里。这会让我们以后可以更容易地增加更多的饮品。\r\n\r\n还可以通过将饮品信息存入对象中，从而去掉所有的条件判断语句：\r\n\r\n```\r\nconst drinks = {\r\n  tea: {\r\n    part: 'leaf',\r\n    caffeine: '15–70 mg/cup',\r\n    age: '4,000+ years'\r\n  },\r\n  coffee: {\r\n    part: 'bean',\r\n    caffeine: '80–185 mg/cup',\r\n    age: '1,000+ years'\r\n  }\r\n};\r\n\r\nfunction Drink({ name }) {\r\n  const info = drinks[name];\r\n  return (\r\n    <section>\r\n      <h1>{name}</h1>\r\n      <dl>\r\n        <dt>Part of plant</dt>\r\n        <dd>{info.part}</dd>\r\n        <dt>Caffeine content</dt>\r\n        <dd>{info.caffeine}</dd>\r\n        <dt>Age</dt>\r\n        <dd>{info.age}</dd>\r\n      </dl>\r\n    </section>\r\n  );\r\n}\r\n\r\nexport default function DrinkList() {\r\n  return (\r\n    <div>\r\n      <Drink name=\"tea\" />\r\n      <Drink name=\"coffee\" />\r\n    </div>\r\n  );\r\n}\r\n\r\n```\r\n\r\n"
+    },
+    {
+      "file": "src/App.tsx",
+      "description": "# 用 key 保持列表项的顺序\r\n\r\n你必须给数组中的每一项都指定一个 key————它可以是字符串或数字的形式，只要能唯一标识出各个数组项就行：\r\n\r\n```\r\n<li key={person.id}>...</li>\r\n```\r\n\r\n> 直接放在 map() 方法里的 JSX 元素一般都需要指定 key 值！\r\n\r\n这些 key 会告诉 React，每个组件对应着数组里的哪一项，所以 React 可以把它们匹配起来。这在数组项进行移动（例如排序）、插入或删除等操作时非常重要。一个合适的 key 可以帮助 React 推断发生了什么，从而得以正确地更新 DOM 树。\r\n\r\n用作 key 的值应该在数据中提前就准备好，而不是在运行时才随手生成：\r\n\r\n如何设定 key 值 \r\n不同来源的数据往往对应不同的 key 值获取方式：\r\n\r\n* 来自数据库的数据： 如果你的数据是从数据库中获取的，那你可以直接使用数据表中的主键，因为它们天然具有唯一性。\r\n* 本地产生数据： 如果你数据的产生和保存都在本地（例如笔记软件里的笔记），那么你可以使用一个自增计数器或者一个类似 uuid 的库来生成 key。\r\n\r\n## React 中为什么需要 key？ \r\n让我们可以从众多的兄弟元素中唯一标识出某一项（JSX 节点或文件）。而一个精心选择的 key 值所能提供的信息远远不止于这个元素在数组中的位置。即使元素的位置在渲染的过程中发生了改变，它提供的 key 值也能让 React 在整个生命周期中一直认得它。\r\n\r\n## Pitfall\r\n你可能会想直接把数组项的索引当作 key 值来用，实际上，如果你没有显式地指定 key 值，React 确实默认会这么做。但是数组项的顺序在插入、删除或者重新排序等操作中会发生改变，此时把索引顺序用作 key 值会产生一些微妙且令人困惑的 bug。\r\n\r\n与之类似，请不要在运行过程中动态地产生 key，像是 key={Math.random()} 这种方式。这会导致每次重新渲染后的 key 值都不一样，从而使得所有的组件和 DOM 元素每次都要重新创建。这不仅会造成运行变慢的问题，更有可能导致用户输入的丢失。所以，使用能从给定数据中稳定取得的值才是明智的选择。\r\n\r\n有一点需要注意，组件不会把 key 当作 props 的一部分。Key 的存在只对 React 本身起到提示作用。如果你的组件需要一个 ID，那么请把它作为一个单独的 prop 传给组件： <Profile key={id} userId={id} />。",
+      "line": 35
+    }
+  ],
+  "ref": "main"
+}
